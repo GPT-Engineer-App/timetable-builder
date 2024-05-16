@@ -17,7 +17,7 @@ const Index = () => {
 
   const addSchedule = () => {
     if (topic && duration && day) {
-      setSchedule((prev) => [...prev, { topic, duration, day }]);
+      setSchedule((prev) => [...prev, { topic, duration, day, completed: false }]);
       setTopic("");
       setDuration("");
       setDay("");
@@ -26,6 +26,10 @@ const Index = () => {
 
   const removeSchedule = (index) => {
     setSchedule((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const toggleCompleted = (index) => {
+    setSchedule((prev) => prev.map((item, i) => (i === index ? { ...item, completed: !item.completed } : item)));
   };
 
   return (
@@ -61,7 +65,8 @@ const Index = () => {
         <VStack spacing={4} width="100%">
           {schedule.map((item, index) => (
             <HStack key={index} spacing={4} width="100%" justifyContent="space-between">
-              <Box>
+              <Checkbox isChecked={item.completed} onChange={() => toggleCompleted(index)} />
+              <Box textDecoration={item.completed ? "line-through" : "none"}>
                 <Text>{item.topic}</Text>
                 <Text fontSize="sm" color="gray.500">
                   {item.duration} hours on {item.day}
